@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Memory - MemoryChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>MemoryChain</h1>
+
+    <h2>Upload Memory</h2>
+
+    <input type="text" id="title" placeholder="Memory Title"><br><br>
+
+    <textarea id="description" placeholder="Write Description" rows="5" cols="35"></textarea><br><br>
+
+    <input type="file" id="file"><br><br>
+
+    <button onclick="uploadMemory()">Upload Memory</button>
+
+    <br><br>
+
+    <button onclick="window.location.href='dashboard.html'">
+        Back to Dashboard
+    </button>
+
+</div>
+
+<script>
+function uploadMemory() {
+
+    let title = document.getElementById("title").value;
+    let description = document.getElementById("description").value;
+    let file = document.getElementById("file").files[0];
+
+    let formData = new FormData();
+
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("file", file);
+
+    fetch("http://127.0.0.1:5000/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        alert("Upload Failed!");
+        console.log(error);
+    });
+
+}
+</script>
+
+</body>
+</html>

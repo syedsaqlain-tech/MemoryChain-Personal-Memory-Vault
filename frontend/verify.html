@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Verify Memory</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🛡️ Verify Memory</h1>
+
+<p id="selectedId"></p>
+
+<input type="hidden" id="memoryId">
+
+<input type="file" id="file">
+
+<br><br>
+
+<button onclick="verifyFile()">
+
+Verify File
+
+</button>
+
+<br><br>
+
+<div id="result"></div>
+
+<br>
+
+<button onclick="window.location.href='view_memories.html'">
+
+⬅️ Back
+
+</button>
+
+</div>
+
+<script>
+
+const params=new URLSearchParams(window.location.search);
+
+const id=params.get("id");
+
+document.getElementById("memoryId").value=id;
+
+document.getElementById("selectedId").innerHTML="Memory ID : "+id;
+
+</script>
+
+<script src="verify.js"></script>
+
+</body>
+
+</html>

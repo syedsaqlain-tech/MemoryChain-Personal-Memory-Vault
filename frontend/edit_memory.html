@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Memory</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <div class="navbar">
+
+    <div class="logo">
+        🧠 MemoryChain
+    </div>
+
+    <div class="menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="upload.html">Upload</a>
+        <a href="view_memories.html">Memories</a>
+        <a href="verify.html">Verify</a>
+        <a href="login.html">Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+<h1>✏️ Edit Memory</h1>
+
+<input
+type="text"
+id="title"
+placeholder="Memory Title">
+
+<textarea
+id="description"
+rows="6"
+placeholder="Memory Description"></textarea>
+
+<br><br>
+
+<button onclick="updateMemory()">
+
+💾 Save Changes
+
+</button>
+
+<br><br>
+
+<button onclick="window.location.href='view_memories.html'">
+
+⬅️ Back
+
+</button>
+
+</div>
+
+<script src="edit.js"></script>
+
+</body>
+
+</html>

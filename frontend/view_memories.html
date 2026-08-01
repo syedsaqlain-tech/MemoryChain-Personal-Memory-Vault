@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Memories</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">🧠 MemoryChain</div>
+
+<div class="menu">
+<a href="dashboard.html">Dashboard</a>
+<a href="upload.html">Upload</a>
+<a href="view_memories.html">Memories</a>
+<a href="verify.html">Verify</a>
+<a href="login.html">Logout</a>
+</div>
+
+</div>
+
+<div class="container">
+
+<h1>📂 View Memories</h1>
+
+<input
+type="text"
+id="searchBox"
+placeholder="Search Memory..."
+onkeyup="searchMemory()">
+
+<br><br>
+
+<table id="memoryTable">
+
+<thead>
+
+<tr>
+
+<th>Title</th>
+<th>Description</th>
+<th>File</th>
+<th>Blockchain</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="window.location.href='dashboard.html'">
+⬅️ Dashboard
+</button>
+
+</div>
+
+<script src="view.js"></script>
+
+</body>
+</html>

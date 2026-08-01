@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MemoryChain Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="navbar">
+
+    <div class="logo">
+        🧠 MemoryChain
+    </div>
+
+    <div class="menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="upload.html">Upload</a>
+        <a href="view_memories.html">Memories</a>
+        <a href="verify.html">Verify</a>
+        <a href="login.html">Logout</a>
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+<div class="hero">
+
+<h1>🧠 MemoryChain</h1>
+
+<h3>Blockchain Based Personal Memory Vault</h3>
+
+<p>
+Secure • Immutable • Verified • Decentralized
+</p>
+
+</div>
+<div class="status-bar">
+
+    <h3>📅 <span id="date"></span></h3>
+
+    <h3>🕒 <span id="time"></span></h3>
+
+</div>
+<br><br>
+<h2>📊 Memory Statistics</h2>
+
+<div class="chart-box">
+
+<canvas id="memoryChart"></canvas>
+
+</div>
+
+<h2>📝 Recent Memories</h2>
+
+<div id="recentMemories"></div>
+
+<div class="cards">
+
+<div class="card">
+<h2>📁 Total Memories</h2>
+<h1 id="total">0</h1>
+</div>
+
+<div class="card">
+<h2>⛓️ Blockchain Stored</h2>
+<h1 id="blockchain">0</h1>
+</div>
+
+<div class="card">
+<h2>👤 Registered Users</h2>
+<h1 id="users">0</h1>
+</div>
+
+<div class="card" onclick="location.href='upload.html'">
+<h2>📤 Upload Memory</h2>
+</div>
+
+<div class="card" onclick="location.href='view_memories.html'">
+<h2>📂 View Memories</h2>
+</div>
+
+<div class="card" onclick="location.href='verify.html'">
+<h2>🛡️ Verify Memory</h2>
+</div>
+<div class="card" onclick="location.href='profile.html'">
+    <h2>👤 My Profile</h2>
+</div>
+
+</div>
+<script src="dashboard.js"></script>
+
+</body>
+
+</html>
