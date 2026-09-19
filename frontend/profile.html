@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <title>My Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MemoryChain | My Profile</title>
+
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
+<!-- Navigation -->
 <div class="navbar">
-    <div class="logo">🧠 MemoryChain</div>
+
+    <div class="logo">
+        🧠 MemoryChain
+    </div>
 
     <div class="menu">
         <a href="dashboard.html">Dashboard</a>
@@ -19,27 +28,47 @@
         <a href="verify.html">Verify</a>
         <a href="profile.html">Profile</a>
     </div>
+
 </div>
 
+
+<!-- Profile -->
 <div class="container">
 
-<h1>👤 My Profile</h1>
+    <div class="profile-card">
 
-<h2 id="name">Loading...</h2>
+        <div class="brand">
 
-<p>Email:</p>
+            <div class="brand-icon">👤</div>
 
-<h3 id="email"></h3>
+            <div>
+                <h1>My Profile</h1>
+                <span>MemoryChain Account</span>
+            </div>
 
-<br>
+        </div>
 
-<button onclick="window.location.href='dashboard.html'">
-⬅️ Back
-</button>
+        <br>
+
+        <h2 id="name">Loading...</h2>
+
+        <p>Email</p>
+
+        <h3 id="email">Loading...</h3>
+
+        <br>
+
+        <button onclick="window.location.href='dashboard.html'">
+            ← Back to Dashboard
+        </button>
+
+    </div>
 
 </div>
+
 
 <script src="profile.js"></script>
 
 </body>
+
 </html>

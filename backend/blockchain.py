@@ -7,7 +7,7 @@ web3 = Web3(Web3.HTTPProvider(GANACHE_URL))
 
 print("Connected:", web3.is_connected())
 
-contract_address = "0x6D66d59d3d2124451D19a3C3d4cf5e815069b897"
+contract_address = "0x73F46112B95E8769Abc0FfF9Fcb3e482860A1d2f"
 
 with open("abi.json", "r") as file:
     contract_abi = json.load(file)

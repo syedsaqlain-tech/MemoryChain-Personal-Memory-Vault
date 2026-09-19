@@ -1,3 +1,9 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# User uploaded files
+**/uploads/
 # Node modules
 /node_modules
 

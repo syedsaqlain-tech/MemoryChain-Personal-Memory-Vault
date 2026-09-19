@@ -1,94 +1,52 @@
-async function login(){
+async function login() {
 
-const email=document.getElementById("email").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-const password=document.getElementById("password").value;
+    if (email === "" || password === "") {
+        alert("Please enter Email and Password.");
+        return;
+    }
 
-if(email==""||password==""){
+    try {
 
-alert("Please enter Email and Password");
+        const response = await fetch(
+            "http://127.0.0.1:5000/login",
+            {
+                method: "POST",
 
-return;
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-}
+                credentials: "include",
 
-const response=await fetch("http://127.0.0.1:5000/login",{
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            }
+        );
 
-method:"POST",
+        const data = await response.json();
 
-headers:{
-"Content-Type":"application/json"
-},
+        if (response.ok && data.success) {
 
-body:JSON.stringify({
+            alert("Login Successful");
 
-email:email,
+            window.location.href = "dashboard.html";
 
-password:password
+        } else {
 
-})
+            alert(data.message || "Invalid Email or Password.");
 
-});
+        }
 
-const data=await response.json();
+    } catch (error) {
 
-if(data.success){
+        console.error("Login Error:", error);
 
-alert("Login Successful");
+        alert("Unable to connect to the server.");
 
-window.location.href="dashboard.html";
-
-}else{
-
-alert(data.message);
-
-}
-
-}
-async function login(){
-
-const email=document.getElementById("email").value;
-
-const password=document.getElementById("password").value;
-
-if(email==""||password==""){
-
-alert("Please enter Email and Password");
-
-return;
-
-}
-
-const response=await fetch("http://127.0.0.1:5000/login",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-email:email,
-
-password:password
-
-})
-
-});
-
-const data=await response.json();
-
-if(data.success){
-
-alert("Login Successful");
-
-window.location.href="dashboard.html";
-
-}else{
-
-alert(data.message);
-
-}
-
+    }
 }

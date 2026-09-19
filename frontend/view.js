@@ -1,6 +1,11 @@
 async function loadMemories() {
 
-    const response = await fetch("http://127.0.0.1:5000/memories");
+    const response = await fetch(
+    "http://127.0.0.1:5000/memories",
+    {
+        credentials: "include"
+    }
+);
     const memories = await response.json();
 
     const table = document.getElementById("tableBody");
@@ -14,15 +19,15 @@ async function loadMemories() {
             <td>${memory.title}</td>
             <td>${memory.description}</td>
             <td>
-                <a href="http://127.0.0.1:5000/download/${memory.filename}" target="_blank">
-                    Download
+                <a href="http://127.0.0.1:5000/download/${memory.id}" target="_blank">
+                     Download
                 </a>
             </td>
             <td>${memory.transaction_hash ? "✅ Stored" : "❌ Not Stored"}</td>
             <td>
-                <button onclick="editMemory(${memory.id})">✏️ Edit</button>
-                <button onclick="verifyMemory(${memory.id})">🛡️ Verify</button>
-                <button onclick="deleteMemory(${memory.id})">🗑️ Delete</button>
+                <button onclick="editMemory(${memory.id})">✏️ Edit</button><br><br>
+                <button onclick="verifyMemory(${memory.id})">🛡️ Verify</button><br><br>
+                <button onclick="deleteMemory(${memory.id})">🗑️ Delete</button><br><br>
             </td>
         `;
 
@@ -63,7 +68,8 @@ async function deleteMemory(id) {
         const response = await fetch(
             "http://127.0.0.1:5000/delete_memory/" + id,
             {
-                method: "DELETE"
+               method: "DELETE",
+               credentials: "include"
             }
         );
 

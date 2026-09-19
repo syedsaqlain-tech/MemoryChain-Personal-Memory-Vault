@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MemoryChain Login</title>
+<title>MemoryChain | Login</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -14,41 +14,58 @@
 
 <body>
 
-<div class="container" style="max-width:420px;text-align:center;">
+<div class="container login-container"
+     style="max-width:420px;text-align:center;">
 
-<h1>🧠 MemoryChain</h1>
-</h2>Login</h2>
+    <div class="brand">
+        <div class="brand-icon">🧠</div>
 
-<p>Login to access your secure memory vault.</p>
+        <div>
+            <h1>MemoryChain</h1>
+            <span>Personal Memory Vault</span>
+        </div>
+    </div>
 
-<input
-type="email"
-id="email"
-placeholder="Enter Email"
-required
->
+    <h2>Welcome Back</h2>
 
-<input
-type="password"
-id="password"
-placeholder="Enter Password"
-required
->
+    <p>
+        Login to access your secure memory vault.
+    </p>
 
-<br><br>
+    <br>
 
-<button onclick="login()">
-Login
-</button>
+    <input
+        type="email"
+        id="email"
+        placeholder="Enter Email"
+        required
+    >
 
-<br><br>
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter Password"
+        required
+    >
 
-<p>
-Don't have an account?
-<a href="register.html">Register Here</a>
-</p>
+    <br><br>
 
-<a href="index.html" class="back-btn">⬅️ Back to Home</a>
+    <button onclick="login()">
+        🔐 Login
+    </button>
+
+    <br><br>
+
+    <p>
+        Don't have an account?
+        <a href="register.html">Register Here</a>
+    </p>
+
+    <a href="index.html" class="back-btn">
+        ← Back to Home
+    </a>
+
+</div>
 
 <script src="login.js"></script>
 

@@ -4,18 +4,20 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MemoryChain Dashboard</title>
+<title>MemoryChain | Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div class="navbar">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Navigation -->
+<div class="navbar">
 
     <div class="logo">
         🧠 MemoryChain
@@ -26,77 +28,153 @@
         <a href="upload.html">Upload</a>
         <a href="view_memories.html">Memories</a>
         <a href="verify.html">Verify</a>
-        <a href="login.html">Logout</a>
+        <a href="#" onclick="logout()">Logout</a>
     </div>
 
 </div>
 
+
+<!-- Dashboard -->
 <div class="dashboard">
 
-<div class="hero">
+    <!-- Welcome section -->
+    <div class="hero">
 
-<h1>🧠 MemoryChain</h1>
+        <div class="brand">
+            <div class="brand-icon">🧠</div>
 
-<h3>Blockchain Based Personal Memory Vault</h3>
+            <div>
+                <h1>MemoryChain</h1>
+                <span>Personal Memory Vault</span>
+            </div>
+        </div>
 
-<p>
-Secure • Immutable • Verified • Decentralized
-</p>
+        <h3>Blockchain-Based Personal Memory Vault</h3>
+
+        <p>
+            Secure • Immutable • Verified • Decentralized
+        </p>
+
+    </div>
+
+
+    <!-- Date & Time -->
+    <div class="status-bar">
+
+        <h3>📅 <span id="date"></span></h3>
+
+        <h3>🕒 <span id="time"></span></h3>
+
+    </div>
+
+
+    <!-- Statistics -->
+    <h2>📊 Memory Statistics</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-icon">📁</div>
+            <h3>Total Memories</h3>
+            <h1 id="total">0</h1>
+        </div>
+
+
+        <div class="card">
+            <div class="card-icon">⛓️</div>
+            <h3>Blockchain Stored</h3>
+            <h1 id="blockchain">0</h1>
+        </div>
+
+
+        <div class="card">
+            <div class="card-icon">👤</div>
+            <h3>Registered Users</h3>
+            <h1 id="users">0</h1>
+        </div>
+
+    </div>
+
+
+    <!-- Chart -->
+    <h2 class="section-title">📈 Memory Overview</h2>
+
+    <div class="chart-box">
+        <canvas id="memoryChart"></canvas>
+    </div>
+
+
+    <!-- Recent Memories -->
+    <h2 class="section-title">📝 Recent Memories</h2>
+
+    <div id="recentMemories"></div>
+
+
+    <!-- Actions -->
+    <h2 class="section-title">⚡ Quick Actions</h2>
+
+    <div class="cards">
+
+        <div class="card action-card"
+             onclick="location.href='upload.html'">
+
+            <div class="card-icon">📤</div>
+
+            <h3>Upload Memory</h3>
+
+            <p>
+                Add a new memory to your secure vault.
+            </p>
+
+        </div>
+
+
+        <div class="card action-card"
+             onclick="location.href='view_memories.html'">
+
+            <div class="card-icon">📂</div>
+
+            <h3>View Memories</h3>
+
+            <p>
+                View your stored memories.
+            </p>
+
+        </div>
+
+
+        <div class="card action-card"
+             onclick="location.href='verify.html'">
+
+            <div class="card-icon">🛡️</div>
+
+            <h3>Verify Memory</h3>
+
+            <p>
+                Check the integrity of a memory.
+            </p>
+
+        </div>
+
+
+        <div class="card action-card"
+             onclick="location.href='profile.html'">
+
+            <div class="card-icon">👤</div>
+
+            <h3>My Profile</h3>
+
+            <p>
+                View your account information.
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
-<div class="status-bar">
 
-    <h3>📅 <span id="date"></span></h3>
 
-    <h3>🕒 <span id="time"></span></h3>
-
-</div>
-<br><br>
-<h2>📊 Memory Statistics</h2>
-
-<div class="chart-box">
-
-<canvas id="memoryChart"></canvas>
-
-</div>
-
-<h2>📝 Recent Memories</h2>
-
-<div id="recentMemories"></div>
-
-<div class="cards">
-
-<div class="card">
-<h2>📁 Total Memories</h2>
-<h1 id="total">0</h1>
-</div>
-
-<div class="card">
-<h2>⛓️ Blockchain Stored</h2>
-<h1 id="blockchain">0</h1>
-</div>
-
-<div class="card">
-<h2>👤 Registered Users</h2>
-<h1 id="users">0</h1>
-</div>
-
-<div class="card" onclick="location.href='upload.html'">
-<h2>📤 Upload Memory</h2>
-</div>
-
-<div class="card" onclick="location.href='view_memories.html'">
-<h2>📂 View Memories</h2>
-</div>
-
-<div class="card" onclick="location.href='verify.html'">
-<h2>🛡️ Verify Memory</h2>
-</div>
-<div class="card" onclick="location.href='profile.html'">
-    <h2>👤 My Profile</h2>
-</div>
-
-</div>
 <script src="dashboard.js"></script>
 
 </body>

@@ -1,7 +1,7 @@
 import os
 import hashlib
 import mysql.connector
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, session
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from blockchain import contract, web3
@@ -11,7 +11,15 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+
+app.secret_key = "memorychain_secret_key_2026"
+# ==========================
+# Frontend Folder
+# ==========================
+FRONTEND_FOLDER = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "frontend")
+)
 
 # ==========================
 # Upload Folder
@@ -127,7 +135,7 @@ def login():
 
         cursor.execute(
             """
-            SELECT id,name,email
+            SELECT id, name, email
             FROM users
             WHERE email=%s AND password=%s
             """,
@@ -140,6 +148,11 @@ def login():
         db.close()
 
         if user:
+            # Save logged-in user in Flask session
+            session["user_id"] = user[0]
+            session["user_name"] = user[1]
+            session["user_email"] = user[2]
+
             return jsonify({
                 "success": True,
                 "message": "Login Successful!",
@@ -166,6 +179,15 @@ def login():
 @app.route("/upload", methods=["POST"])
 def upload_memory():
     try:
+        # Get logged-in user
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
+
         title = request.form.get("title")
         description = request.form.get("description")
         file = request.files.get("file")
@@ -191,20 +213,19 @@ def upload_memory():
 
         file.save(filepath)
 
-        # Generate SHA-256 Hash
         with open(filepath, "rb") as f:
             file_hash = hashlib.sha256(f.read()).hexdigest()
 
         db, cursor = get_cursor()
 
-        # Save in MySQL first
+        # Save memory with the logged-in user's ID
         cursor.execute(
             """
             INSERT INTO memories
-            (title, description, filename)
-            VALUES (%s,%s,%s)
+            (user_id, title, description, filename)
+            VALUES (%s, %s, %s, %s)
             """,
-            (title, description, filename)
+            (user_id, title, description, filename)
         )
 
         db.commit()
@@ -214,7 +235,6 @@ def upload_memory():
         transaction_hash = None
         blockchain_index = None
 
-        # Store Hash on Blockchain
         try:
             account = web3.eth.accounts[0]
 
@@ -276,6 +296,15 @@ def upload_memory():
 @app.route("/memories", methods=["GET"])
 def get_memories():
     try:
+        # Get logged-in user
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
+
         db, cursor = get_cursor()
 
         cursor.execute("""
@@ -287,8 +316,9 @@ def get_memories():
                 transaction_hash,
                 blockchain_index
             FROM memories
+            WHERE user_id=%s
             ORDER BY id DESC
-        """)
+        """, (user_id,))
 
         rows = cursor.fetchall()
 
@@ -315,13 +345,20 @@ def get_memories():
             "message": str(e)
         }), 500
 
-
 # ==========================
 # Get Single Memory API
 # ==========================
 @app.route("/memory/<int:id>", methods=["GET"])
 def get_memory(id):
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
+
         db, cursor = get_cursor()
 
         cursor.execute("""
@@ -333,8 +370,8 @@ def get_memory(id):
                 transaction_hash,
                 blockchain_index
             FROM memories
-            WHERE id=%s
-        """, (id,))
+            WHERE id=%s AND user_id=%s
+        """, (id, user_id))
 
         row = cursor.fetchone()
 
@@ -362,14 +399,44 @@ def get_memory(id):
             "success": False,
             "message": str(e)
         }), 500
-
-
 # ==========================
 # Download File API
 # ==========================
-@app.route("/download/<filename>", methods=["GET"])
-def download_file(filename):
+@app.route("/download/<int:id>", methods=["GET"])
+def download_file(id):
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
+
+        db, cursor = get_cursor()
+
+        cursor.execute(
+            """
+            SELECT filename
+            FROM memories
+            WHERE id=%s AND user_id=%s
+            """,
+            (id, user_id)
+        )
+
+        row = cursor.fetchone()
+
+        cursor.close()
+        db.close()
+
+        if not row:
+            return jsonify({
+                "success": False,
+                "message": "Memory not found."
+            }), 404
+
+        filename = row[0]
+
         return send_from_directory(
             app.config["UPLOAD_FOLDER"],
             filename,
@@ -381,12 +448,19 @@ def download_file(filename):
             "success": False,
             "message": str(e)
         }), 404
-# ==========================
 # Update Memory API
 # ==========================
 @app.route("/update_memory/<int:id>", methods=["PUT"])
 def update_memory(id):
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
+
         data = request.get_json()
 
         title = data.get("title")
@@ -405,9 +479,9 @@ def update_memory(id):
             UPDATE memories
             SET title=%s,
                 description=%s
-            WHERE id=%s
+            WHERE id=%s AND user_id=%s
             """,
-            (title, description, id)
+            (title, description, id, user_id)
         )
 
         db.commit()
@@ -435,19 +509,30 @@ def update_memory(id):
             "message": str(e)
         }), 500
 
-
 # ==========================
 # Delete Memory API
 # ==========================
 @app.route("/delete_memory/<int:id>", methods=["DELETE"])
 def delete_memory(id):
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
+
         db, cursor = get_cursor()
 
-        # Get filename before deleting
+        # Check that this memory belongs to the logged-in user
         cursor.execute(
-            "SELECT filename FROM memories WHERE id=%s",
-            (id,)
+            """
+            SELECT filename
+            FROM memories
+            WHERE id=%s AND user_id=%s
+            """,
+            (id, user_id)
         )
 
         row = cursor.fetchone()
@@ -463,9 +548,13 @@ def delete_memory(id):
 
         filename = row[0]
 
+        # Delete only the user's memory
         cursor.execute(
-            "DELETE FROM memories WHERE id=%s",
-            (id,)
+            """
+            DELETE FROM memories
+            WHERE id=%s AND user_id=%s
+            """,
+            (id, user_id)
         )
 
         db.commit()
@@ -473,7 +562,6 @@ def delete_memory(id):
         cursor.close()
         db.close()
 
-        # Delete uploaded file
         filepath = os.path.join(
             app.config["UPLOAD_FOLDER"],
             filename
@@ -500,6 +588,14 @@ def delete_memory(id):
 @app.route("/profile", methods=["GET"])
 def profile():
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
+
         db, cursor = get_cursor()
 
         cursor.execute("""
@@ -508,9 +604,8 @@ def profile():
                 name,
                 email
             FROM users
-            ORDER BY id ASC
-            LIMIT 1
-        """)
+            WHERE id=%s
+        """, (user_id,))
 
         user = cursor.fetchone()
 
@@ -520,7 +615,7 @@ def profile():
         if not user:
             return jsonify({
                 "success": False,
-                "message": "No user found."
+                "message": "User not found."
             }), 404
 
         return jsonify({
@@ -540,8 +635,14 @@ def profile():
 # ==========================
 @app.route("/verify", methods=["POST"])
 def verify_file():
-
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
 
         memory_id = request.form.get("id")
         file = request.files.get("file")
@@ -560,13 +661,14 @@ def verify_file():
 
         db, cursor = get_cursor()
 
+        # Check that the memory belongs to the logged-in user
         cursor.execute(
             """
             SELECT blockchain_index
             FROM memories
-            WHERE id=%s
+            WHERE id=%s AND user_id=%s
             """,
-            (memory_id,)
+            (memory_id, user_id)
         )
 
         row = cursor.fetchone()
@@ -597,7 +699,6 @@ def verify_file():
         blockchain_hash = blockchain_memory[2]
 
         if uploaded_hash == blockchain_hash:
-
             return jsonify({
                 "success": True,
                 "verified": True,
@@ -620,12 +721,25 @@ def verify_file():
 # ==========================
 @app.route("/total_memories", methods=["GET"])
 def total_memories():
-
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
 
         db, cursor = get_cursor()
 
-        cursor.execute("SELECT COUNT(*) FROM memories")
+        cursor.execute(
+            """
+            SELECT COUNT(*)
+            FROM memories
+            WHERE user_id=%s
+            """,
+            (user_id,)
+        )
 
         total = cursor.fetchone()[0]
 
@@ -638,7 +752,6 @@ def total_memories():
         })
 
     except Exception as e:
-
         return jsonify({
             "success": False,
             "message": str(e)
@@ -648,21 +761,41 @@ def total_memories():
 # ==========================
 @app.route("/dashboard_stats", methods=["GET"])
 def dashboard_stats():
-
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
 
         db, cursor = get_cursor()
 
-        cursor.execute("SELECT COUNT(*) FROM memories")
-        total = cursor.fetchone()[0]
-
-        cursor.execute("""
+        # Total memories of logged-in user
+        cursor.execute(
+            """
             SELECT COUNT(*)
             FROM memories
-            WHERE transaction_hash IS NOT NULL
-        """)
+            WHERE user_id=%s
+            """,
+            (user_id,)
+        )
+        total = cursor.fetchone()[0]
+
+        # Blockchain memories of logged-in user
+        cursor.execute(
+            """
+            SELECT COUNT(*)
+            FROM memories
+            WHERE user_id=%s
+            AND transaction_hash IS NOT NULL
+            """,
+            (user_id,)
+        )
         blockchain = cursor.fetchone()[0]
 
+        # Registered users remains global
         cursor.execute("SELECT COUNT(*) FROM users")
         users = cursor.fetchone()[0]
 
@@ -677,7 +810,6 @@ def dashboard_stats():
         })
 
     except Exception as e:
-
         return jsonify({
             "success": False,
             "message": str(e)
@@ -687,8 +819,14 @@ def dashboard_stats():
 # ==========================
 @app.route("/recent_memories", methods=["GET"])
 def recent_memories():
-
     try:
+        user_id = session.get("user_id")
+
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "message": "Please login first."
+            }), 401
 
         db, cursor = get_cursor()
 
@@ -699,9 +837,10 @@ def recent_memories():
                 description,
                 filename
             FROM memories
+            WHERE user_id=%s
             ORDER BY id DESC
             LIMIT 5
-        """)
+        """, (user_id,))
 
         rows = cursor.fetchall()
 
@@ -711,24 +850,47 @@ def recent_memories():
         memories = []
 
         for row in rows:
-
             memories.append({
-
                 "id": row[0],
                 "title": row[1],
                 "description": row[2],
                 "filename": row[3]
-
             })
 
         return jsonify(memories)
 
     except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
+@app.route("/logout", methods=["POST"])
+def logout():
+    try:
+        session.clear()
 
+        return jsonify({
+            "success": True,
+            "message": "Logout Successful!"
+        })
+
+    except Exception as e:
         return jsonify({
             "success": False,
             "message": str(e)
         }), 500
 #run sever
+@app.route("/frontend/<path:filename>")
+def serve_frontend(filename):
+    return send_from_directory(
+        FRONTEND_FOLDER,
+        filename
+    )
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(
+        host="127.0.0.1",
+        port=5000,
+        debug=True
+    )

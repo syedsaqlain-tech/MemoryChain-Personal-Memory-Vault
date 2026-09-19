@@ -2,58 +2,101 @@ const params = new URLSearchParams(window.location.search);
 
 const id = params.get("id");
 
-async function loadMemory(){
 
-const response = await fetch(
-"http://127.0.0.1:5000/memory/"+id
-);
+async function loadMemory() {
 
-const data = await response.json();
+    try {
 
-document.getElementById("title").value = data.title;
+        const response = await fetch(
+            "http://127.0.0.1:5000/memory/" + id,
+            {
+                credentials: "include"
+            }
+        );
 
-document.getElementById("description").value = data.description;
+        const data = await response.json();
 
+        if (!response.ok || data.success === false) {
+
+            alert(data.message || "Memory not found.");
+
+            window.location.href = "view_memories.html";
+
+            return;
+        }
+
+        document.getElementById("title").value = data.title;
+
+        document.getElementById("description").value = data.description;
+
+    } catch (error) {
+
+        console.error("Load Memory Error:", error);
+
+        alert("Unable to load memory.");
+
+    }
 }
 
-async function updateMemory(){
 
-const title = document.getElementById("title").value;
+async function updateMemory() {
 
-const description = document.getElementById("description").value;
+    const title =
+        document.getElementById("title").value.trim();
 
-const response = await fetch(
+    const description =
+        document.getElementById("description").value.trim();
 
-"http://127.0.0.1:5000/update_memory/"+id,
+    if (title === "" || description === "") {
 
-{
+        alert("Please fill all fields.");
 
-method:"PUT",
+        return;
+    }
 
-headers:{
+    try {
 
-"Content-Type":"application/json"
+        const response = await fetch(
 
-},
+            "http://127.0.0.1:5000/update_memory/" + id,
 
-body:JSON.stringify({
+            {
+                method: "PUT",
 
-title:title,
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-description:description
+                credentials: "include",
 
-})
+                body: JSON.stringify({
 
+                    title: title,
+
+                    description: description
+
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        if (response.ok && data.success) {
+
+            window.location.href = "view_memories.html";
+
+        }
+
+    } catch (error) {
+
+        console.error("Update Memory Error:", error);
+
+        alert("Unable to update memory.");
+
+    }
 }
 
-);
-
-const data = await response.json();
-
-alert(data.message);
-
-window.location.href="view_memories.html";
-
-}
 
 loadMemory();

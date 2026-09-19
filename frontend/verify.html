@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Verify Memory</title>
+<title>MemoryChain | Verify Memory</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -14,49 +14,122 @@
 
 <body>
 
-<div class="container">
+<!-- Navigation -->
+<div class="navbar">
 
-<h1>🛡️ Verify Memory</h1>
+    <div class="logo">
+        🧠 MemoryChain
+    </div>
 
-<p id="selectedId"></p>
-
-<input type="hidden" id="memoryId">
-
-<input type="file" id="file">
-
-<br><br>
-
-<button onclick="verifyFile()">
-
-Verify File
-
-</button>
-
-<br><br>
-
-<div id="result"></div>
-
-<br>
-
-<button onclick="window.location.href='view_memories.html'">
-
-⬅️ Back
-
-</button>
+    <div class="menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="upload.html">Upload</a>
+        <a href="view_memories.html">Memories</a>
+        <a href="verify.html">Verify</a>
+        <a href="login.html">Logout</a>
+    </div>
 
 </div>
 
+
+<!-- Verification Section -->
+<div class="container">
+
+    <div style="text-align:center;">
+
+        <div class="brand">
+
+            <div class="brand-icon">🛡️</div>
+
+            <div>
+                <h1>Verify Memory</h1>
+                <span>Blockchain Integrity Verification</span>
+            </div>
+
+        </div>
+
+        <p style="color:#cbd5e1;">
+            Verify that your memory file has not been modified.
+        </p>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Selected Memory -->
+    <div class="status-bar">
+
+        <h3>
+            📌 <span id="selectedId"></span>
+        </h3>
+
+    </div>
+
+
+    <!-- Hidden Memory ID -->
+    <input type="hidden" id="memoryId">
+
+
+    <!-- File Selection -->
+    <label for="file">Select the file to verify</label>
+
+    <input
+        type="file"
+        id="file"
+    >
+
+
+    <br><br>
+
+
+    <!-- Verify Button -->
+    <div style="text-align:center;">
+
+        <button onclick="verifyFile()">
+            🛡️ Verify File
+        </button>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Result -->
+    <div id="result"></div>
+
+
+    <br>
+
+
+    <!-- Back -->
+    <div style="text-align:center;">
+
+        <button onclick="window.location.href='view_memories.html'">
+            ← Back to Memories
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- Keep existing ID logic -->
 <script>
 
-const params=new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
 
-const id=params.get("id");
+const id = params.get("id");
 
-document.getElementById("memoryId").value=id;
+document.getElementById("memoryId").value = id;
 
-document.getElementById("selectedId").innerHTML="Memory ID : "+id;
+document.getElementById("selectedId").innerHTML =
+    "Memory ID : " + id;
 
 </script>
+
 
 <script src="verify.js"></script>
 

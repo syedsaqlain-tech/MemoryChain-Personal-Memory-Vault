@@ -2,71 +2,116 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>View Memories</title>
+
+<title>MemoryChain | My Memories</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
+<!-- Navigation -->
 <div class="navbar">
 
-<div class="logo">🧠 MemoryChain</div>
+    <div class="logo">
+        🧠 MemoryChain
+    </div>
 
-<div class="menu">
-<a href="dashboard.html">Dashboard</a>
-<a href="upload.html">Upload</a>
-<a href="view_memories.html">Memories</a>
-<a href="verify.html">Verify</a>
-<a href="login.html">Logout</a>
+    <div class="menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="upload.html">Upload</a>
+        <a href="view_memories.html">Memories</a>
+        <a href="verify.html">Verify</a>
+        <a href="login.html">Logout</a>
+    </div>
+
 </div>
 
-</div>
 
+<!-- Memories -->
 <div class="container">
 
-<h1>📂 View Memories</h1>
+    <div style="text-align:center;">
 
-<input
-type="text"
-id="searchBox"
-placeholder="Search Memory..."
-onkeyup="searchMemory()">
+        <div class="brand">
 
-<br><br>
+            <div class="brand-icon">📂</div>
 
-<table id="memoryTable">
+            <div>
+                <h1>My Memories</h1>
+                <span>Personal Memory Vault</span>
+            </div>
 
-<thead>
+        </div>
 
-<tr>
+        <p style="color:#cbd5e1;">
+            View and manage your securely stored memories.
+        </p>
 
-<th>Title</th>
-<th>Description</th>
-<th>File</th>
-<th>Blockchain</th>
-<th>Action</th>
+    </div>
 
-</tr>
 
-</thead>
+    <br>
 
-<tbody id="tableBody">
 
-</tbody>
+    <!-- Search -->
+    <input
+        type="text"
+        id="searchBox"
+        placeholder="🔍 Search Memory..."
+        onkeyup="searchMemory()"
+    >
 
-</table>
 
-<br>
+    <br><br>
 
-<button onclick="window.location.href='dashboard.html'">
-⬅️ Dashboard
-</button>
+
+    <!-- Memory Table -->
+    <div style="overflow-x:auto;">
+
+        <table id="memoryTable">
+
+            <thead>
+
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>File</th>
+                    <th>Blockchain</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="tableBody">
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <br><br>
+
+
+    <!-- Back -->
+    <div style="text-align:center;">
+
+        <button onclick="window.location.href='dashboard.html'">
+            ← Dashboard
+        </button>
+
+    </div>
 
 </div>
+
 
 <script src="view.js"></script>
 
 </body>
+
 </html>
