@@ -60,48 +60,37 @@ Each memory is associated with the logged-in user's account.
 A user can access only their own memories.
 
 ---
-
 ## 🏗️ System Architecture
 
 ```text
-                    ┌──────────────────────┐
-                    │        User          │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-              ┌─────────────────────────────┐
-              │     Frontend Web Pages      │
-              │      HTML / CSS / JS        │
-              └─────────────┬───────────────┘
-                            │
-                            ▼
-              ┌─────────────────────────────┐
-              │       Flask Backend        │
-              │          Python            │
-              └───────┬───────────┬─────────┘
-                      │           │
-             ┌────────▼─────┐    ┌▼─────────────────┐
-             │ MySQL        │    │ SHA-256 Hashing  │
-             │ Database     │    │ File Integrity   │
-             └──────────────┘    └────────┬─────────┘
-                                          │
-                                          ▼
-                              ┌──────────────────────┐
-                              │ Web3.py / Blockchain │
-                              └──────────┬───────────┘
-                                         │
-                                         ▼
-                              ┌──────────────────────┐
-                              │ Solidity Smart       │
-                              │ Contract             │
-                              └──────────┬───────────┘
-                                         │
-                                         ▼
-                              ┌──────────────────────┐
-                              │ Ganache Local        │
-                              │ Ethereum Network     │
-                              └──────────────────────┘
-🔄 Application Workflow
+User
+ │
+ ▼
+Frontend Web Pages
+(HTML / CSS / JavaScript)
+ │
+ ▼
+Flask Backend
+(Python)
+ │
+ ├──────────────► MySQL Database
+ │
+ ├──────────────► SHA-256 File Integrity
+ │
+ ▼
+Web3.py
+ │
+ ▼
+Solidity Smart Contract
+ │
+ ▼
+Ganache
+(Local Ethereum Network)
+```
+
+## 🔄 Application Workflow
+
+```text
 Register
    ↓
 Login
@@ -125,32 +114,37 @@ Download / Edit / Delete
 Verify File Integrity
    ↓
 Logout
+```
 
-⛓️ Blockchain Implementation
-The project uses a Solidity smart contract named:
+## ⛓️ Blockchain Implementation
 
-MemoryChain
+The project uses a Solidity smart contract named **MemoryChain**.
 
 The smart contract maintains memory records containing:
 
-Title
-Description
-File Hash
+- Title
+- Description
+- File Hash
 
-The contract provides functions such as:
+The smart contract provides functions such as:
 
-addMemory()
-getMemory()
-totalMemories()
+- `addMemory()`
+- `getMemory()`
+- `totalMemories()`
 
-Ganache is used as the local Ethereum blockchain for development and demonstration.
-Hardhat is used for smart-contract development and deployment.
-Web3.py connects the Flask backend with the deployed smart contract.
+**Ganache** is used as the local Ethereum blockchain for development and demonstration.
 
-🔐 File Integrity Verification
-MemoryChain uses SHA-256 hashing to verify file integrity.
+**Hardhat** is used for smart-contract development and deployment.
 
-Upload
+**Web3.py** connects the Flask backend with the deployed smart contract.
+
+## 🔐 File Integrity Verification
+
+MemoryChain uses **SHA-256 hashing** to verify file integrity.
+
+### Upload Process
+
+```text
 File
  ↓
 SHA-256
@@ -158,9 +152,11 @@ SHA-256
 File Hash
  ↓
 MySQL + Blockchain
+```
 
+### Verification Process
 
-Verification
+```text
 Selected File
  ↓
 SHA-256
@@ -170,34 +166,44 @@ New Hash
 Compare with Stored Hash
  ↓
 Match → File Verified
+```
+
 If the file is modified, its SHA-256 hash changes, allowing the application to detect that it no longer matches the stored hash.
 
-🗄️ Database
-The project uses MySQL with the database:
-memorychain
-Main tables:
+## 🗄️ Database
 
-users
-memories
-activity_logs
+The project uses **MySQL** with the database:
 
-users
+`memorychain`
+
+### Main Tables
+
+- `users`
+- `memories`
+- `activity_logs`
+
+### users
+
 Stores user account information.
 
-memories
+### memories
+
 Stores memory information including:
 
-Title
-Description
-Filename
-Transaction hash
-Blockchain index
-User ID
-activity_logs
+- Title
+- Description
+- Filename
+- Transaction Hash
+- Blockchain Index
+- User ID
+
+### activity_logs
+
 Stores application activity information.
 
-📁 Project Structure
+## 📁 Project Structure
 
+```text
 MemoryChain-Personal-Memory-Vault/
 │
 ├── backend/
@@ -238,77 +244,105 @@ MemoryChain-Personal-Memory-Vault/
 ├── .gitignore
 ├── .env
 └── README.md
-.env, uploaded files, Python cache files, and other local/generated files are excluded from the GitHub repository using .gitignore.
+```
 
-🛠️ Technologies Used
-Frontend
+`.env`, uploaded files, Python cache files, and other local/generated files are excluded from the GitHub repository using `.gitignore`.
 
-HTML
-CSS
-JavaScript
+## 🛠️ Technologies Used
 
-Backend
+### Frontend
+- HTML
+- CSS
+- JavaScript
 
-Python
-Flask
-Database
-MySQL
-Blockchain
-Solidity
-Ethereum Smart Contract
-Ganache
-Hardhat
-Web3.py
+### Backend
+- Python
+- Flask
 
-Security / Integrity
+### Database
+- MySQL
 
-SHA-256 hashing
-Flask Session-based authentication
-User-specific access control
+### Blockchain
+- Solidity
+- Ethereum Smart Contract
+- Ganache
+- Hardhat
+- Web3.py
 
-Development Tools
+### Security / Integrity
+- SHA-256 Hashing
+- Flask Session-based Authentication
+- User-specific Access Control
 
-Visual Studio Code
-Git & GitHub
+### Development Tools
+- Visual Studio Code
+- Git
+- GitHub
 
-▶️ How to Run MemoryChain
-1. Start MySQL and create the `memorychain` database.
+## ▶️ How to Run MemoryChain
 
-2. Start Ganache on:
-   http://127.0.0.1:7545
+### Requirements
 
-3. Deploy the smart contract:
-   cd blockchain
-   npx hardhat run scripts/deploy.js --network ganache
+- Python
+- MySQL
+- Node.js / npm
+- Ganache
+- Hardhat
 
-4. Start Flask:
-   cd backend
-   python app.py
+### Steps
 
-5. Open in browser:
-   http://127.0.0.1:5000/frontend/index.html
+**1. Start MySQL**
 
-Requirements: Python, MySQL, Node.js/npm, Ganache, and Hardhat.
+Create the `memorychain` database.
 
-📌 Future Enhancements
+**2. Start Ganache**
+
+Use:
+
+```text
+http://127.0.0.1:7545
+```
+
+**3. Deploy the Smart Contract**
+
+From the project root:
+
+```bash
+npx hardhat run scripts/deploy.js --network ganache
+```
+
+**4. Start Flask**
+
+```bash
+cd backend
+python app.py
+```
+
+**5. Open the Application**
+
+```text
+http://127.0.0.1:5000/frontend/index.html
+```
+
+## 📌 Future Enhancements
+
 Possible future improvements include:
 
-Cloud storage integration
-Production blockchain deployment
-Stronger authentication
-Password hashing
-Email verification
-Password reset
-Mobile application
-Advanced search and filtering
-Improved activity logging
-Secure cloud deployment
+- Cloud storage integration
+- Production blockchain deployment
+- Stronger authentication
+- Password hashing
+- Email verification
+- Password reset
+- Mobile application
+- Advanced search and filtering
+- Improved activity logging
+- Secure cloud deployment
 
-🎓 Academic Project
+## 🎓 Academic Project
 
-Project: MemoryChain – Personal Memory Vault
-Developer: Syed Saqlain
-Course: Bachelor of Computer Applications (BCA)
-College: St. Philomena's College (Autonomous), Mysuru
-Purpose: Academic / Educational Project
-
+**Project:** MemoryChain – Personal Memory Vault  
+**Developer:** Syed Saqlain  
+**Course:** Bachelor of Computer Applications (BCA)  
+**College:** St. Philomena's College (Autonomous), Mysuru  
+**Purpose:** Academic / Educational Project
