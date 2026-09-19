@@ -323,7 +323,36 @@ python app.py
 ```text
 http://127.0.0.1:5000/frontend/index.html
 ```
+## 📸 Screenshots
 
+### 1. Home
+![Home](screenshots/home.png)
+
+### 2. Register
+![Register](screenshots/register.png)
+
+### 3. Login
+![Login](screenshots/login.png)
+
+### 4. Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### 5. Profile
+![Profile](screenshots/profile.png)
+
+### 6. Upload Memory
+![Upload Memory](screenshots/upload.png)
+
+### 7. Memories
+![Memories](screenshots/memories.png)
+
+### 8. Edit Memory
+![Edit Memory](screenshots/edit-memory.png)
+
+### 9. Verify Memory
+![Verify Memory](screenshots/verify.png)
+
+---
 ## 📌 Future Enhancements
 
 Possible future improvements include:
